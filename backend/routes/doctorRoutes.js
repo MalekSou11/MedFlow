@@ -1,0 +1,32 @@
+const express = require("express");
+const auth = require("../middlewares/auth");
+const permit = require("../middlewares/rbac");
+const Invoice = require("../models/Invoice");
+
+const router = express.Router();
+
+// Créer une facture
+router.post("/", auth, permit("receptionist", "admin"), async (req, res) => {
+  const invoice = await Invoice.create({ ...req.body });
+  res.json(invoice);
+});
+
+// Lister
+router.get("/", auth, permit("admin", "receptionist", "doctor"), async (req, res) => {
+  const invoices = await Invoice.find().populate("patient doctor", "firstName lastName");
+  res.json(invoices);
+});
+
+// Modifier statut (payer)
+router.put("/:id", auth, permit("receptionist", "admin"), async (req, res) => {
+  const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(invoice);
+});
+
+// Supprimer
+router.delete("/:id", auth, permit("admin"), async (req, res) => {
+  await Invoice.findByIdAndDelete(req.params.id);
+  res.json({ message: "Invoice deleted" });
+});
+
+module.exports = router;
