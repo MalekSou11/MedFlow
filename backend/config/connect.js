@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/medflow')
-    .then(
-    ()=> {
-        console.log('connected')
-    }
-    )
-    .catch( 
-        (err) => {
-            console.log(err)
-        }
-    )
-module.export = mongoose;
+
+mongoose.connect('mongodb://127.0.0.1:27017/medflow', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log(' MongoDB Connected');
+  })
+  .catch((err) => {
+    console.error(' MongoDB connection error:', err);
+  });
+
+module.exports = mongoose;
