@@ -1,32 +1,33 @@
 'use client';
-
-import dynamic from 'next/dynamic';
-import React from 'react';
+import { useState } from 'react';
+import AppointmentsCalendar from '../../components/AppointmentsCalendar';
 import AppointmentForm from '../../components/AppointmentForm';
 
-// FullCalendar est un composant client lourd → import dynamique sans SSR
-const AppointmentsCalendar = dynamic(
-  () => import('../../components/AppointmentsCalendar'),
-  { ssr: false }
-);
-
 export default function AppointmentsPage() {
-  const [key, setKey] = React.useState(0);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  const onSaved = () => setKey((k) => k + 1);
+  const handleSelect = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const handleSaved = () => {
+    setSelectedEvent(null);
+    setRefreshKey(k => k + 1);
+  };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-4">
+    <div className="p-8 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
-        <AppointmentsCalendar
-          key={key}
-          onEventClick={(evt) => {
-            alert(`RDV: ${evt._id || evt.id}`);
-          }}
-        />
+        <h1 className="text-2xl font-bold mb-4">📅 Rendez-vous</h1>
+        <AppointmentsCalendar key={refreshKey} onSelectEvent={handleSelect} />
       </div>
+
       <div>
-        <AppointmentForm onSaved={onSaved} />
+        <h2 className="text-xl font-semibold mb-3">
+          {selectedEvent ? 'Modifier le rendez-vous' : 'Créer un rendez-vous'}
+        </h2>
+        <AppointmentForm appointment={selectedEvent} onSaved={handleSaved} />
       </div>
     </div>
   );

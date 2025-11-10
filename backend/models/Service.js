@@ -18,11 +18,6 @@ const serviceSchema = new mongoose.Schema({
     type: Number, // durée en minutes
     default: 30
   },
-  clinicId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // ou un modèle Clinic si tu en as un
-    required: true
-  },
   isDeleting: {
     type: Boolean,
     default: false

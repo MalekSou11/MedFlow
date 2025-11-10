@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!token) return setUser(null);
     // tu peux fetch /api/auth/me si tu as cette route
-    fetch(`${API_URL}/api/auth/me`, {
+    fetch(`http://localhost:5000/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.ok ? res.json() : Promise.reject())

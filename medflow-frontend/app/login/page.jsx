@@ -22,7 +22,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem('mf_token', data.token);
-        router.push('/appointments');
+        router.push('/dashboard');
       } else {
         setError(data.message || 'Erreur de connexion');
       }

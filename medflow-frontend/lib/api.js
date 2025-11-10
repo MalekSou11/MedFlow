@@ -1,16 +1,15 @@
-// lib/api.js
-
-export const API_URL = 'http://localhost:5000'; // ✅ correction : pas de /api ici
+export const API_URL = 'http://localhost:5000';
 
 export const getAuthHeaders = () => {
-  const token = localStorage.getItem('mf_token'); // ✅ même clé que dans le login
+  const token = localStorage.getItem('mf_token'); 
   return {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
+    Authorization: token ? `Bearer ${token}` : '',
   };
 };
 
-export const apiFetch = async (endpoint, options = {}) => {
+
+/* export const apiFetch = async (endpoint, options = {}) => {
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -19,7 +18,22 @@ export const apiFetch = async (endpoint, options = {}) => {
     },
   });
   if (!res.ok) {
-    throw new Error(`Erreur API: ${res.status}`);
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `Erreur API: ${res.status}`);
   }
   return res.json();
+}; */
+
+export const apiFetch = async (endpoint, options = {}) => {
+  const token = localStorage.getItem('mf_token');
+  const res = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ...options.headers
+    }
+  });
+  return res.json();
 };
+

@@ -7,13 +7,13 @@ const router = express.Router();
 
 // Créer rendez-vous
 router.post("/", auth, permit("receptionist", "admin", "patient"), async (req, res) => {
-  const appt = await Appointment.create({ ...req.body, clinicId: req.user.clinicId });
+  const appt = await Appointment.create({ ...req.body });
   res.json(appt);
 });
 
 // Lister
 router.get("/", auth, permit("admin", "receptionist", "doctor"), async (req, res) => {
-  const list = await Appointment.find({ clinicId: req.user.clinicId })
+  const list = await Appointment.find()
     .populate("patient doctor", "firstName lastName");
   res.json(list);
 });

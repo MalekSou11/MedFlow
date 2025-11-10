@@ -7,13 +7,13 @@ const router = express.Router();
 
 // Créer service
 router.post("/", auth, permit("admin"), async (req, res) => {
-  const service = await Service.create({ ...req.body, clinicId: req.user.clinicId });
+  const service = await Service.create({ ...req.body });
   res.json(service);
 });
 
 // Lister services
 router.get("/", auth, permit("admin", "receptionist", "doctor"), async (req, res) => {
-  const list = await Service.find({ clinicId: req.user.clinicId });
+  const list = await Service.find();
   res.json(list);
 });
 

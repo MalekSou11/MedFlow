@@ -7,7 +7,7 @@ const PDFDocument = require("pdfkit"); // pour générer le PDF
 const router = express.Router();
 
 // ✅ Créer une prescription (docteur uniquement)
-router.post("/", auth, permit("doctor"), async (req, res) => {
+router.post("/", auth, permit("admin"), async (req, res) => {
   const p = await Prescription.create({ ...req.body });
   res.json(p);
 });
@@ -20,7 +20,7 @@ router.get("/", auth, permit("admin", "doctor", "patient"), async (req, res) => 
 });
 
 // ✅ Modifier une prescription (docteur)
-router.put("/:id", auth, permit("doctor"), async (req, res) => {
+router.put("/:id", auth, permit("admin"), async (req, res) => {
   const pres = await Prescription.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.json(pres);
 });

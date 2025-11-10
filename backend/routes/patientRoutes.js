@@ -6,13 +6,13 @@ const Patient = require('../models/patient');
 
 // créer patient (receptionist, admin)
 router.post('/', auth, permit('admin', 'receptionist'), async (req, res) => {
-  const p = await Patient.create({ ...req.body, clinicId: req.user.clinicId });
+  const p = await Patient.create({ ...req.body });
   res.json(p);
 });
 
 // lister patients (tous roles autorisés)
 router.get('/', auth, permit('admin', 'receptionist', 'doctor'), async (req, res) => {
-  const patients = await Patient.find({ clinicId: req.user.clinicId });
+  const patients = await Patient.find();
   res.json(patients);
 });
 

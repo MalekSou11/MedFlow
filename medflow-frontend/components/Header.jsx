@@ -1,23 +1,47 @@
-'use client';
-import { useAuth } from './AuthProvider';
-import { useRouter } from 'next/navigation';
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import "./Header.css";
 
 export default function Header() {
-  const { user, logout } = useAuth();
   const router = useRouter();
+  const [token, setToken] = useState(null);
+
+  // Mettre à jour le token à chaque rendu client
+  useEffect(() => {
+    setToken(localStorage.getItem("mf_token"));
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("mf_token");
+    setToken(null); // force rerender
+    router.push("/login");
+  };
+
   return (
-    <header className="bg-white shadow p-4 flex justify-between">
-      <div className="text-lg font-bold">MedFlow</div>
-      <div>
-        {user ? (
+    <header className="app-header">
+      <div className="logo" onClick={() => router.push("/")}>
+        🩺 <span>MedFlow</span>
+      </div>
+      <nav>
+        {token ? (
           <>
-            <span className="mr-4">Bonjour, {user.firstName || user.email}</span>
-            <button className="btn" onClick={() => { logout(); router.push('/login'); }}>Se déconnecter</button>
+            <Link href="/dashboard">Accueil</Link>
+            <Link href="/patients">Patients</Link>
+            <Link href="/consultations">Consultations</Link>
+            <button className="logout-btn" onClick={handleLogout}>
+              Déconnexion
+            </button>
           </>
         ) : (
-          <button className="btn" onClick={() => router.push('/login')}>Se connecter</button>
+          <>
+            <Link href="/login">Connexion</Link>
+            <Link href="/register">Inscription</Link>
+          </>
         )}
-      </div>
+      </nav>
     </header>
   );
 }

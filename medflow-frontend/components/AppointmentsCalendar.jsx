@@ -13,7 +13,7 @@ export default function AppointmentsCalendar({ onEventClick }) {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/appointments`, { headers: getAuthHeaders() });
+        const res = await fetch(`http://localhost:5000/api/appointments`, { headers: getAuthHeaders() });
         if (!res.ok) throw new Error('Erreur fetch appointments');
         const data = await res.json();
         // data est tableau d'appointments ; on mappe en events FullCalendar

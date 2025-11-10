@@ -36,7 +36,7 @@ export default function AppointmentForm({ onSaved }) {
     e.preventDefault();
     try {
       // format attendu par le backend : patient (id), start (ISO), end (ISO), service
-      const res = await fetch(`${API_URL}/api/appointments`, {
+      const res = await fetch(`http://localhost:5000/api/appointments`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({
@@ -68,7 +68,7 @@ export default function AppointmentForm({ onSaved }) {
 
       <select name="service" value={form.service} onChange={handleChange} className="w-full p-2 border">
         <option value="">Sélectionner service</option>
-        {services.map(s => <option key={s._id} value={s.name}>{s.name} — {s.price}€</option>)}
+        {services.map(s => <option key={s._id} value={s.name}>{s.name} — {s.price}DTN</option>)}
       </select>
 
       <label className="block">
