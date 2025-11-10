@@ -10,13 +10,14 @@ router.post("/", auth, permit("receptionist", "admin"), async (req, res) => {
   const invoice = await Invoice.create({ ...req.body });
   res.json(invoice);
 });
-
-// Lister
+// invoiceRoutes.js
 router.get("/", auth, permit("admin", "receptionist", "doctor"), async (req, res) => {
   const invoices = await Invoice.find()
-    .populate("patient doctor", "firstName lastName");
+    .populate("patient", "firstName lastName"); 
   res.json(invoices);
 });
+
+
 
 // Modifier statut (payer)
 router.put("/:id", auth, permit("receptionist", "admin"), async (req, res) => {

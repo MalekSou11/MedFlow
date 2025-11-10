@@ -8,22 +8,6 @@ export const getAuthHeaders = () => {
   };
 };
 
-
-/* export const apiFetch = async (endpoint, options = {}) => {
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      ...getAuthHeaders(),
-      ...options.headers,
-    },
-  });
-  if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
-    throw new Error(errData.message || `Erreur API: ${res.status}`);
-  }
-  return res.json();
-}; */
-
 export const apiFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem('mf_token');
   const res = await fetch(`${API_URL}${endpoint}`, {
@@ -34,6 +18,20 @@ export const apiFetch = async (endpoint, options = {}) => {
       ...options.headers
     }
   });
-  return res.json();
-};
 
+  let data;
+  try {
+    // Essaie de parser le JSON
+    data = await res.clone().json(); // clone() permet de relire le corps sans erreur
+  } catch (e) {
+    // Si JSON invalide, retourne le texte brut
+    data = await res.text();
+  }
+
+  if (!res.ok) {
+    const errMessage = data?.message || data || `Erreur API: ${res.status}`;
+    throw new Error(errMessage);
+  }
+
+  return data;
+};

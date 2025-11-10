@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { saveToken } from '../../lib/auth'; // ton fichier auth.js
+import { emitLogin } from '../../lib/authEvents'; // nouveau fichier
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,9 +21,17 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
+
       if (res.ok) {
-        localStorage.setItem('mf_token', data.token);
+        // ✅ Sauvegarde du token
+        saveToken(data.token);
+
+        // ✅ Émettre l'événement pour que le header se mette à jour
+        emitLogin();
+
+        // ✅ Redirection
         router.push('/dashboard');
       } else {
         setError(data.message || 'Erreur de connexion');

@@ -1,3 +1,4 @@
+// src/lib/auth.js
 export const saveToken = (token) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("mf_token", token);

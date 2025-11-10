@@ -8,27 +8,47 @@ const router = express.Router();
 
 // ✅ Créer une prescription (docteur uniquement)
 router.post("/", auth, permit("admin"), async (req, res) => {
-  const p = await Prescription.create({ ...req.body });
-  res.json(p);
+  try {
+    const p = await Prescription.create({ ...req.body });
+    res.json(p);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la création de la prescription" });
+  }
 });
 
 // ✅ Lister les prescriptions (admin, docteur, patient)
 router.get("/", auth, permit("admin", "doctor", "patient"), async (req, res) => {
-  const list = await Prescription.find()
-    .populate("doctor patient", "firstName lastName");
-  res.json(list);
+  try {
+    const list = await Prescription.find()
+      .populate("doctor patient", "firstName lastName");
+    res.json(list);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la récupération des prescriptions" });
+  }
 });
 
 // ✅ Modifier une prescription (docteur)
 router.put("/:id", auth, permit("admin"), async (req, res) => {
-  const pres = await Prescription.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(pres);
+  try {
+    const pres = await Prescription.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(pres);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la modification de la prescription" });
+  }
 });
 
 // ✅ Supprimer une prescription (docteur ou admin)
 router.delete("/:id", auth, permit("doctor", "admin"), async (req, res) => {
-  await Prescription.findByIdAndDelete(req.params.id);
-  res.json({ message: "Prescription deleted" });
+  try {
+    await Prescription.findByIdAndDelete(req.params.id);
+    res.json({ message: "Prescription deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la suppression de la prescription" });
+  }
 });
 
 // ✅ Télécharger une prescription en PDF (tous les rôles autorisés)
@@ -54,16 +74,20 @@ router.get("/:id/pdf", auth, permit("admin", "doctor", "patient"), async (req, r
     doc.fontSize(22).text("Ordonnance Médicale", { align: "center" });
     doc.moveDown();
 
-
     doc.fontSize(14).text(`Patient : ${pres.patient.firstName} ${pres.patient.lastName}`);
     doc.text(`Médecin : ${pres.doctor.firstName} ${pres.doctor.lastName}`);
     doc.text(`Date : ${new Date(pres.createdAt).toLocaleDateString()}`);
     doc.moveDown();
+
     doc.fontSize(16).text("Prescription :", { underline: true });
     doc.moveDown();
+
     if (Array.isArray(pres.medicines) && pres.medicines.length > 0) {
       pres.medicines.forEach((m, index) => {
-        doc.fontSize(14).text(`${index + 1}. ${m}`);
+        // Affiche le nom et les détails si disponibles
+        doc.fontSize(14).text(
+          `${index + 1}. ${m.name}${m.dose ? `, Dose: ${m.dose}` : ''}${m.frequency ? `, Fréquence: ${m.frequency}` : ''}${m.duration ? `, Durée: ${m.duration}` : ''}`
+        );
       });
     } else {
       doc.text("Aucun médicament enregistré.");
