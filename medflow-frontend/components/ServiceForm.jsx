@@ -20,7 +20,6 @@ export default function ServiceForm({ onCreated }) {
 
     setLoading(true);
     try {
-      // Utilise apiFetch centralisé ; apiFetch attend le endpoint commençant par /api/...
       await apiFetch('/api/services', {
         method: 'POST',
         body: JSON.stringify({ name: form.name.trim(), price: Number(form.price) }),
@@ -37,36 +36,43 @@ export default function ServiceForm({ onCreated }) {
   };
 
   return (
-    <form onSubmit={handleCreate} className="space-y-3">
+    <form
+      onSubmit={handleCreate}
+      className="bg-white rounded-3xl shadow-md p-6 space-y-4 border border-gray-100 hover:shadow-lg transition duration-300 max-w-md"
+    >
+      <h2 className="text-xl font-semibold text-gray-900">Ajouter un service</h2>
+
       <input
         name="name"
         value={form.name}
         onChange={handleChange}
         placeholder="Nom du service (ex: Consultation)"
-        className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500"
         required
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-gray-300 focus:outline-none"
       />
+
       <input
         name="price"
         type="number"
         value={form.price}
         onChange={handleChange}
         placeholder="Prix (DTN)"
-        className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500"
         required
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-gray-300 focus:outline-none"
       />
-      <div className="flex gap-2">
+
+      <div className="flex gap-3">
         <button
           type="submit"
           disabled={loading}
-          className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition"
+          className="bg-gray-800 text-white px-6 py-2 rounded-xl hover:bg-gray-900 transition"
         >
           {loading ? 'Création...' : 'Créer'}
         </button>
         <button
           type="button"
           onClick={() => setForm({ name: '', price: '' })}
-          className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200"
+          className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl hover:bg-gray-200 transition"
         >
           Réinitialiser
         </button>

@@ -9,13 +9,12 @@ import "./Header.css";
 export default function Header() {
   const router = useRouter();
   const [token, setToken] = useState(getToken());
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleAuthChange = () => setToken(getToken());
-
     window.addEventListener("login", handleAuthChange);
     window.addEventListener("logout", handleAuthChange);
-
     return () => {
       window.removeEventListener("login", handleAuthChange);
       window.removeEventListener("logout", handleAuthChange);
@@ -25,14 +24,23 @@ export default function Header() {
   const handleLogout = () => {
     clearToken();
     setToken(null);
-    emitLogout(); // Notifie les autres composants
+    emitLogout();
     router.push("/login");
   };
 
   return (
     <header className="app-header">
-      <div className="logo" onClick={() => router.push("/")}>🩺 <span>MedFlow</span></div>
-      <nav>
+      <div className="logo" onClick={() => router.push("/")}>
+        🩺 <span>MedFlow</span>
+      </div>
+
+      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <nav className={`nav-links ${menuOpen ? "active" : ""}`}>
         {token ? (
           <>
             <Link href="/dashboard">Accueil</Link>

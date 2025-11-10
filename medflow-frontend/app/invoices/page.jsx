@@ -10,7 +10,6 @@ export default function InvoicesPage() {
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [error, setError] = useState('');
 
-  // Charger patients
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -26,7 +25,6 @@ export default function InvoicesPage() {
     fetchPatients();
   }, []);
 
-  // Charger factures d’un patient
   const fetchInvoices = async (patientId) => {
     if (!patientId) return;
     setLoadingInvoices(true);
@@ -51,41 +49,50 @@ export default function InvoicesPage() {
   if (loadingPatients) return <p>Chargement des patients...</p>;
 
   return (
-    <div className="p-4 max-w-5xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold mb-4">Facturation & Paiement</h1>
+    <div className="p-6 max-w-6xl mx-auto space-y-6 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-semibold text-gray-800">Facturation & Paiement</h1>
 
       {/* Sélecteur de patient */}
-      <select
-        className="border p-2 rounded w-full"
-        value={selectedPatient?._id || ''}
-        onChange={e => setSelectedPatient(patients.find(p => p._id === e.target.value))}
-      >
-        <option value="">-- Choisir un patient --</option>
-        {patients.map(p => (
-          <option key={p._id} value={p._id}>{p.firstName} {p.lastName}</option>
-        ))}
-      </select>
+      <div className="mb-6">
+        <label className="block text-gray-700 font-medium mb-2">Choisir un patient :</label>
+        <select
+          className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+          value={selectedPatient?._id || ''}
+          onChange={e => setSelectedPatient(patients.find(p => p._id === e.target.value))}
+        >
+          <option value="">-- Choisir un patient --</option>
+          {patients.map(p => (
+            <option key={p._id} value={p._id}>
+              {p.firstName} {p.lastName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {selectedPatient && (
-        <div className="mt-4 space-y-3">
+        <div className="space-y-4">
           {loadingInvoices ? (
-            <p>Chargement des factures...</p>
+            <p className="text-gray-600">Chargement des factures...</p>
           ) : (
             invoices.length === 0 ? (
-              <p className="text-gray-600">Aucune facture pour ce patient</p>
+              <p className="text-gray-500 italic">Aucune facture pour ce patient</p>
             ) : (
               invoices.map(inv => (
-                <div key={inv._id} className="border p-4 rounded bg-white shadow space-y-2">
-                  <div className="flex justify-between items-center">
+                <div key={inv._id} className="bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition duration-200">
+                  <div className="flex justify-between items-center mb-3">
                     <div>
-                      <strong>Facture #{inv._id}</strong> - Statut: 
-                      <span className={`ml-2 font-semibold ${inv.status === 'paid' ? 'text-green-600' : 'text-red-600'}`}>
-                        {inv.status}
+                      <h2 className="text-lg font-semibold text-gray-800">Facture #{inv._id}</h2>
+                      <span
+                        className={`mt-1 inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                          inv.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}
+                      >
+                        {inv.status === 'paid' ? 'Payé' : 'Non payé'}
                       </span>
                     </div>
                     {inv.status !== 'paid' && (
                       <button
-                        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
                         onClick={async () => {
                           try {
                             await apiFetch(`/api/invoices/${inv._id}`, {
@@ -104,11 +111,13 @@ export default function InvoicesPage() {
                     )}
                   </div>
 
-                  <div><strong>Montant total:</strong> ${inv.total.toFixed(2)}</div>
+                  <div className="text-gray-700 mb-2">
+                    <strong>Montant total :</strong> ${inv.total.toFixed(2)}
+                  </div>
 
                   <div>
-                    <strong>Articles:</strong>
-                    <ul className="ml-4 list-disc">
+                    <strong className="text-gray-700">Articles :</strong>
+                    <ul className="ml-4 mt-1 list-disc space-y-1 text-gray-600">
                       {inv.items.map((item, idx) => (
                         <li key={idx}>{item.description} - {item.qty} x ${item.amount}</li>
                       ))}

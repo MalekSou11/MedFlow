@@ -26,17 +26,15 @@ export default function PatientForm({ patient = null, onSaved }) {
     setSaving(true);
     try {
       if (patient?._id) {
-       await apiFetch(`/api/patients/${patient._id}`, {
-  method: 'PUT',
-  body: JSON.stringify(form), // <-- ici aussi
-});
-
+        await apiFetch(`/api/patients/${patient._id}`, {
+          method: 'PUT',
+          body: JSON.stringify(form),
+        });
       } else {
-    
         await apiFetch('/api/patients', {
-  method: 'POST',
-  body: JSON.stringify(form), // <-- ici
-});
+          method: 'POST',
+          body: JSON.stringify(form),
+        });
       }
       onSaved?.();
     } catch (err) {
@@ -48,12 +46,44 @@ export default function PatientForm({ patient = null, onSaved }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded shadow p-4 space-y-3">
-      <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="Prénom" className="w-full border px-3 py-2 rounded" required />
-      <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Nom" className="w-full border px-3 py-2 rounded" required />
-      <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" className="w-full border px-3 py-2 rounded" required />
-      <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Téléphone" className="w-full border px-3 py-2 rounded" />
-      <button type="submit" disabled={saving} className="bg-green-600 text-white px-4 py-2 rounded">
+    <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-md p-6 space-y-4 border border-gray-100 hover:shadow-lg transition duration-300">
+      <input
+        name="firstName"
+        value={form.firstName}
+        onChange={handleChange}
+        placeholder="Prénom"
+        required
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-gray-300 focus:outline-none"
+      />
+      <input
+        name="lastName"
+        value={form.lastName}
+        onChange={handleChange}
+        placeholder="Nom"
+        required
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-gray-300 focus:outline-none"
+      />
+      <input
+        name="email"
+        type="email"
+        value={form.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-gray-300 focus:outline-none"
+      />
+      <input
+        name="contactNumber"
+        value={form.contactNumber}
+        onChange={handleChange}
+        placeholder="Téléphone"
+        className="w-full border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-gray-300 focus:outline-none"
+      />
+      <button
+        type="submit"
+        disabled={saving}
+        className="bg-gray-800 text-white px-6 py-2 rounded-xl hover:bg-gray-900 transition"
+      >
         {saving ? 'Enregistrement...' : (patient ? 'Mettre à jour' : 'Créer')}
       </button>
     </form>
