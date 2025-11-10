@@ -33,22 +33,27 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg p-6 rounded w-80">
-        <h1 className="text-2xl font-bold text-blue-700 mb-4">Créer un compte</h1>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-800 text-white shadow-lg p-8 rounded-2xl w-80"
+      >
+        <h1 className="text-2xl font-bold text-white mb-6 text-center">
+          Créer un compte
+        </h1>
 
         <input
           name="firstName"
           placeholder="Prénom"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 text-white w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
         <input
           name="lastName"
           placeholder="Nom"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 text-white w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
         <input
@@ -56,7 +61,7 @@ export default function RegisterPage() {
           type="email"
           placeholder="Email"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 text-white w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
         <input
@@ -64,24 +69,26 @@ export default function RegisterPage() {
           type="password"
           placeholder="Mot de passe"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 text-white w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
 
         <select
           name="role"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 text-white w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
         >
-          <option value="patient">Patient</option>
-          <option value="doctor">Docteur</option>
+          <option value="patient" className="text-black">Patient</option>
+          <option value="doctor" className="text-black">Docteur</option>
         </select>
 
-        <button className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700">
+        <button className="bg-gray-200 hover:bg-gray-300 text-gray-900 w-full py-2 rounded font-medium transition">
           S’inscrire
         </button>
 
-        {message && <p className="text-center text-gray-600 mt-3">{message}</p>}
+        {message && (
+          <p className="text-center text-gray-300 mt-3 font-medium">{message}</p>
+        )}
       </form>
     </main>
   );

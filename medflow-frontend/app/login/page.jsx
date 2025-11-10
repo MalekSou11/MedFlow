@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { saveToken } from '../../lib/auth'; // ton fichier auth.js
-import { emitLogin } from '../../lib/authEvents'; // nouveau fichier
+import { saveToken } from '../../lib/auth';
+import { emitLogin } from '../../lib/authEvents';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,13 +25,8 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ Sauvegarde du token
         saveToken(data.token);
-
-        // ✅ Émettre l'événement pour que le header se mette à jour
         emitLogin();
-
-        // ✅ Redirection
         router.push('/dashboard');
       } else {
         setError(data.message || 'Erreur de connexion');
@@ -42,15 +37,19 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg p-6 rounded w-80">
-        <h1 className="text-2xl font-bold text-blue-700 mb-4">Connexion</h1>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-800 text-white shadow-lg p-8 rounded-2xl w-80"
+      >
+        <h1 className="text-2xl font-bold text-white mb-6 text-center">Connexion</h1>
+
         <input
           name="email"
           type="email"
           placeholder="Email"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
         <input
@@ -58,13 +57,18 @@ export default function LoginPage() {
           type="password"
           placeholder="Mot de passe"
           onChange={handleChange}
-          className="border w-full mb-3 px-3 py-2 rounded"
+          className="border border-gray-600 bg-gray-700 w-full mb-4 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
-        <button className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700">
+
+        {/* Bouton gris clair */}
+        <button className="bg-gray-200 hover:bg-gray-300 text-gray-900 w-full py-2 rounded font-medium transition">
           Se connecter
         </button>
-        {error && <p className="text-center text-red-500 mt-3">{error}</p>}
+
+        {error && (
+          <p className="text-center text-red-400 mt-3 font-medium">{error}</p>
+        )}
       </form>
     </main>
   );
